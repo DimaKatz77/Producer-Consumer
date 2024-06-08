@@ -1,6 +1,5 @@
 ﻿
 using ProducerConsumerDesignPattern.Interfaces;
-using System;
 using System.Threading.Channels;
 
 namespace ProducerConsumerDesignPattern
@@ -9,7 +8,7 @@ namespace ProducerConsumerDesignPattern
     {
         private Func<T, T> _operation;
 
-        Channel<T> channel = Channel.CreateBounded<T>(1);
+        private Channel<T> _channel = Channel.CreateBounded<T>(1);
 
         public ChannelProducerConsumer(
             Func<T, T> operation,
@@ -18,35 +17,33 @@ namespace ProducerConsumerDesignPattern
             _operation = operation;
 
             if (messageLimit > 1)
-                channel = Channel.CreateBounded<T>(messageLimit);
+                _channel = Channel.CreateBounded<T>(messageLimit);
         }
 
-        public async Task ConsumeAsync<T1>()
+        public async Task ConsumeAsync<T1>(CancellationToken token)
         {
             while (true)
             {
-                T result;
-                await channel.Reader.WaitToReadAsync();
+                if (token.IsCancellationRequested)
                 {
-                    if (channel.Reader.TryRead(out result))
-                        if (result != null)
-                        {
-                            //Calculation Time
-                            Thread.Sleep(500);
+                    break;
+                }
+                T result;
+                await _channel.Reader.WaitToReadAsync();
+                {
+                    if (_channel.Reader.TryRead(out result))
 
+                        if (result != null)
                             Console.WriteLine($"Read -----  {_operation(result)} - > ManagedThreadId {Thread.CurrentThread.ManagedThreadId}");
-                        }
+
                 }
             }
         }
 
-        public async Task ProduceAsync<T1>(T1 value)
+        public void Produce<T1>(T1 value)
         {
-            if (channel.Writer.TryWrite(value as T))
-            {
+            if (_channel.Writer.TryWrite(value as T))
                 Console.WriteLine($"Write ----- {value} - > ManagedThreadId {Thread.CurrentThread.ManagedThreadId}");
-            }
-          
         }
     }
 }
