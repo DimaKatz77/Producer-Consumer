@@ -22,13 +22,14 @@ namespace ProducerConsumerDesignPattern
 
         public async Task ConsumeAsync<T1>(CancellationToken token)
         {
+            bool flag = true;
             while (true)
             {
                 if (token.IsCancellationRequested)
-                {
                     break;
-                }
+
                 T result;
+
                 await _channel.Reader.WaitToReadAsync();
                 {
                     if (_channel.Reader.TryRead(out result))

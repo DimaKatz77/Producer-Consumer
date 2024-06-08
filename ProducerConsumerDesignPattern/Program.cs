@@ -10,7 +10,9 @@ public class Programm
     {
         int workers = 3;
 
-        var _producerConsumer = new ChannelProducerConsumer<string>(new StringOperation().ToUpper, 1);
+        int channelSize = 1;
+
+        var _producerConsumer = new ChannelProducerConsumer<string>(new StringOperation().ToUpper, channelSize);
 
         var cancelTokenSource = new CancellationTokenSource();
 
