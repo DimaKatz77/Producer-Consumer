@@ -28,14 +28,14 @@ namespace ProducerConsumerDesignPattern
                 if (token.IsCancellationRequested)
                     break;
 
-                T result;
-
                 await _channel.Reader.WaitToReadAsync();
                 {
-                    if (_channel.Reader.TryRead(out result))
+                    T result;
+                    _channel.Reader.TryRead(out result);
 
-                        if (result != null)
-                            Console.WriteLine($"Read -----  {_operation(result)} - > ManagedThreadId {Thread.CurrentThread.ManagedThreadId}");
+                    //After tests pls comment  next demonstration 2 Lines
+                    if (result != null)
+                           Console.WriteLine($"Read -----  {_operation(result)} - > ManagedThreadId {Thread.CurrentThread.ManagedThreadId}");
 
                 }
             }
@@ -43,8 +43,10 @@ namespace ProducerConsumerDesignPattern
 
         public void Produce<T1>(T1 value)
         {
-            if (_channel.Writer.TryWrite(value as T))
-                Console.WriteLine($"Write ----- {value} - > ManagedThreadId {Thread.CurrentThread.ManagedThreadId}");
+            _channel.Writer.TryWrite(value as T);
+
+            //After tests pls comment  Next demonstration Line
+             Console.WriteLine($"Write ----- {value} - > ManagedThreadId {Thread.CurrentThread.ManagedThreadId}");
         }
     }
 }
