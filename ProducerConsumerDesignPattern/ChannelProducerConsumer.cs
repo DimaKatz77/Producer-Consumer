@@ -5,13 +5,13 @@ using System.Threading.Channels;
 
 namespace ProducerConsumerDesignPattern
 {
-    public class ChannelProducerConsumer : IProducerConsumer 
+    public class ChannelProducerConsumer : IProducerConsumer
     {
         private IAction _action;
 
         private Channel<string> _channel = Channel.CreateBounded<string>(1);
 
-        public ChannelProducerConsumer( IAction action, int messageLimit = 1)
+        public ChannelProducerConsumer(IAction action, int messageLimit = 1)
         {
             _action = action;
 
@@ -32,7 +32,7 @@ namespace ProducerConsumerDesignPattern
                     _channel.Reader.TryRead(out result);
 
                     if (result != null)
-                      await  _action.Execute(result);
+                        await _action.Execute(result);
                 }
             }
         }
@@ -42,7 +42,7 @@ namespace ProducerConsumerDesignPattern
             _channel.Writer.TryWrite(value);
 
             //After tests pls comment  Next demonstration Line
-             Console.WriteLine($"Insert Message To Channel > ----- {value} - > ManagedThreadId {Thread.CurrentThread.ManagedThreadId}");
+            Console.WriteLine($"Insert Message To Channel > ----- {value} - > ManagedThreadId {Thread.CurrentThread.ManagedThreadId}");
         }
     }
 }

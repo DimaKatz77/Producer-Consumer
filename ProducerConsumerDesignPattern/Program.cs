@@ -12,9 +12,9 @@ public class Programm
         {
             Action = new MirrorAction(),//Can to change (LowerAction, UpperAction, MirrorAction)
             ChannelSize = 2,
-            ConsumersCount = 3,
-            ProducersCount = 1,
-            WorkingTimeInSeconds = 40
+            ConsumersCount = 30,
+            ProducersCount = 100,
+            WorkingTimeInSeconds = 100
         };
 
         //Init Class
@@ -38,9 +38,9 @@ public class Programm
             //The While loop created for non stop Produce Action
             while (true)
             {
-               await Task.Delay(100);
+                await Task.Delay(100);
 
-               _producerConsumer.Produce(HelperMethods.RandomString(50));
+                _producerConsumer.Produce(HelperMethods.RandomString(50));
             }
         }
         Enumerable.Range(0, _settings.ProducersCount).Select(_ => RunProduce()).ToArray();
