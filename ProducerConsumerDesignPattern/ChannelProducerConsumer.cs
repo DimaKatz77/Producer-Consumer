@@ -33,7 +33,6 @@ namespace ProducerConsumerDesignPattern
                     {
                         await _action.Execute(result);
                     }
-                        
                 }
             }
         }
