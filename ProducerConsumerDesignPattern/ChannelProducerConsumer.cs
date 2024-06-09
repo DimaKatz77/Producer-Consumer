@@ -1,6 +1,7 @@
 ﻿
 using ProducerConsumerDesignPattern.Interfaces;
 using ProducerConsumerDesignPattern.Strategy;
+using System.Reflection.PortableExecutable;
 using System.Threading.Channels;
 
 namespace ProducerConsumerDesignPattern
@@ -28,21 +29,25 @@ namespace ProducerConsumerDesignPattern
 
                 await _channel.Reader.WaitToReadAsync();
                 {
-                    string result;
-                    _channel.Reader.TryRead(out result);
-
-                    if (result != null)
+                    while (_channel.Reader.TryRead(out string result))
+                    {
                         await _action.Execute(result);
+                    }
+                        
                 }
             }
         }
 
         public void Produce(string value)
         {
-            _channel.Writer.TryWrite(value);
 
-            //After tests pls comment  Next demonstration Line
-            Console.WriteLine($"Insert Message To Channel > ----- {value} - > ManagedThreadId {Thread.CurrentThread.ManagedThreadId}");
+            if (_channel.Writer.TryWrite(value))
+            {
+                //After tests pls comment  Next demonstration Line
+                Console.WriteLine($"Insert Message To Channel > ----- {value} - > ManagedThreadId {Thread.CurrentThread.ManagedThreadId}");
+
+            }
+
         }
     }
 }
