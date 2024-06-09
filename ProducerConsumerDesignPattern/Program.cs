@@ -5,7 +5,6 @@ using ProducerConsumerDesignPattern.Strategy;
 
 public class Programm
 {
-    private ProducerConsumerBaseSettings _programParams;
     static async Task Main(string[] args)
     {
         //Init Program settings. You can to change it .
@@ -21,7 +20,7 @@ public class Programm
         //Init Class
         var _producerConsumer = new ChannelProducerConsumer(_settings.Action, _settings.ChannelSize);
 
-        //Init CancellationToken
+        //Init Cancellation Token
         var cancelTokenSource = new CancellationTokenSource();
         var token = cancelTokenSource.Token;
 
