@@ -14,7 +14,7 @@ public class Programm
             ChannelSize = 2,
             ConsumersCount = 3,
             ProducersCount = 1,
-            WorkingTimeInSeconds = 30
+            WorkingTimeInSeconds = 40
         };
 
         //Init Class
