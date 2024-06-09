@@ -3,8 +3,8 @@ namespace ProducerConsumerDesignPattern.Interfaces
 {
     public interface IProducerConsumer
     {
-        void Produce<T>(T value);
+        void Produce(string value);
 
-        Task ConsumeAsync<T>(CancellationToken token);
+        Task ConsumeAsync(CancellationToken token);
     }
 }

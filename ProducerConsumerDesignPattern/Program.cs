@@ -1,62 +1,58 @@
 ﻿
 using ProducerConsumerDesignPattern;
-using System.Text;
-using System;
-using System.Runtime.CompilerServices;
+using ProducerConsumerDesignPattern.Common;
+using ProducerConsumerDesignPattern.Strategy;
 
 public class Programm
 {
+    private ProducerConsumerBaseSettings _programParams;
     static async Task Main(string[] args)
     {
-        int workers = 3;
+        //Init Program settings. You can to change it .
+        ProducerConsumerBaseSettings _settings = new ProducerConsumerBaseSettings
+        {
+            Action = new MirrorAction(),//Can to change (LowerAction, UpperAction, MirrorAction)
+            ChannelSize = 2,
+            ConsumersCount = 3,
+            ProducersCount = 1,
+            WorkingTimeInSeconds = 30
+        };
 
-        int channelSize = 1;
+        //Init Class
+        var _producerConsumer = new ChannelProducerConsumer(_settings.Action, _settings.ChannelSize);
 
-        var _producerConsumer = new ChannelProducerConsumer<string>(new StringOperation().ToUpper, channelSize);
-
+        //Init CancellationToken
         var cancelTokenSource = new CancellationTokenSource();
-
         var token = cancelTokenSource.Token;
 
         // Run Consumer Tasks
         async Task RunConsumer()
         {
-            await _producerConsumer.ConsumeAsync<string>(token);
+            await _producerConsumer.ConsumeAsync(token);
         }
-        Enumerable.Range(0, workers).Select(_ => RunConsumer()).ToArray();
+        Enumerable.Range(0, _settings.ConsumersCount).Select(_ => RunConsumer()).ToArray();
 
 
-        // Run Produce Threads
+        // Run Produce Tasks
         async Task RunProduce()
         {
+            //The While loop created for non stop Produce Action
             while (true)
             {
                await Task.Delay(100);
 
-               _producerConsumer.Produce(RandomString(50));
+               _producerConsumer.Produce(HelperMethods.RandomString(50));
             }
         }
-        Enumerable.Range(0, 1).Select(_ => RunProduce()).ToArray();
+        Enumerable.Range(0, _settings.ProducersCount).Select(_ => RunProduce()).ToArray();
 
 
         //Stop after 20 seconds
-        await Task.Delay(20000);
+        await Task.Delay(_settings.WorkingTimeInSeconds * 1000);
 
         cancelTokenSource.Cancel();
 
         cancelTokenSource.Dispose();
-    }
-
-    private static string RandomString(int length)
-    {
-        Random random = new Random();
-
-        const string pool = "abcdefghijklmnopqrstuvwxyz0123456789 ";
-
-        var chars = Enumerable.Range(0, length)
-            .Select(x => pool[random.Next(0, pool.Length)]);
-
-        return new string(chars.ToArray());
     }
 
 

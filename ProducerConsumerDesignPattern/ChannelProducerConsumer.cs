@@ -1,28 +1,26 @@
 ﻿
 using ProducerConsumerDesignPattern.Interfaces;
+using ProducerConsumerDesignPattern.Strategy;
 using System.Threading.Channels;
 
 namespace ProducerConsumerDesignPattern
 {
-    public class ChannelProducerConsumer<T> : IProducerConsumer where T : class
+    public class ChannelProducerConsumer : IProducerConsumer 
     {
-        private Func<T, T> _operation;
+        private IAction _action;
 
-        private Channel<T> _channel = Channel.CreateBounded<T>(1);
+        private Channel<string> _channel = Channel.CreateBounded<string>(1);
 
-        public ChannelProducerConsumer(
-            Func<T, T> operation,
-            int messageLimit = 1)
+        public ChannelProducerConsumer( IAction action, int messageLimit = 1)
         {
-            _operation = operation;
+            _action = action;
 
             if (messageLimit > 1)
-                _channel = Channel.CreateBounded<T>(messageLimit);
+                _channel = Channel.CreateBounded<string>(messageLimit);
         }
 
-        public async Task ConsumeAsync<T1>(CancellationToken token)
+        public async Task ConsumeAsync(CancellationToken token)
         {
-            bool flag = true;
             while (true)
             {
                 if (token.IsCancellationRequested)
@@ -30,23 +28,21 @@ namespace ProducerConsumerDesignPattern
 
                 await _channel.Reader.WaitToReadAsync();
                 {
-                    T result;
+                    string result;
                     _channel.Reader.TryRead(out result);
 
-                    //After tests pls comment  next demonstration 2 Lines
                     if (result != null)
-                           Console.WriteLine($"Read -----  {_operation(result)} - > ManagedThreadId {Thread.CurrentThread.ManagedThreadId}");
-
+                      await  _action.Execute(result);
                 }
             }
         }
 
-        public void Produce<T1>(T1 value)
+        public void Produce(string value)
         {
-            _channel.Writer.TryWrite(value as T);
+            _channel.Writer.TryWrite(value);
 
             //After tests pls comment  Next demonstration Line
-             Console.WriteLine($"Write ----- {value} - > ManagedThreadId {Thread.CurrentThread.ManagedThreadId}");
+             Console.WriteLine($"Insert Message To Channel > ----- {value} - > ManagedThreadId {Thread.CurrentThread.ManagedThreadId}");
         }
     }
 }
