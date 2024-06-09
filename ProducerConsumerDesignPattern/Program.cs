@@ -11,10 +11,10 @@ public class Programm
         ProducerConsumerBaseSettings _settings = new ProducerConsumerBaseSettings
         {
             Action = new MirrorAction(),//Can to change (LowerAction, UpperAction, MirrorAction)
-            ChannelSize = 5,
-            ConsumersCount = 30,
-            ProducersCount = 100,
-            WorkingTimeInSeconds = 100
+            ChannelSize = 1,
+            ConsumersCount = 3,
+            ProducersCount = 1,
+            WorkingTimeInSeconds = 30
         };
 
         //Init Class
