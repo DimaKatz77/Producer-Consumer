@@ -1,7 +1,4 @@
-﻿
-using System.Runtime.CompilerServices;
-
-namespace ProducerConsumerDesignPattern.Strategy
+﻿namespace ProducerConsumerDesignPattern.Actions
 {
     public abstract class BaseAction
     {

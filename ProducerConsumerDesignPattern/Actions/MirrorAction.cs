@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace ProducerConsumerDesignPattern.Strategy
+namespace ProducerConsumerDesignPattern.Actions
 {
     public class MirrorAction : BaseAction, IAction
     {
@@ -12,7 +12,6 @@ namespace ProducerConsumerDesignPattern.Strategy
                 sb.Append(input[i]);
             }
             Log(sb.ToString());
-
         }
     }
 }

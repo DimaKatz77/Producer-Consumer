@@ -1,5 +1,4 @@
-﻿
-namespace ProducerConsumerDesignPattern.Strategy
+﻿namespace ProducerConsumerDesignPattern.Actions
 {
     public class UpperAction : BaseAction, IAction
     {

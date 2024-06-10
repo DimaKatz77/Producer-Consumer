@@ -1,7 +1,7 @@
 ﻿
 using ProducerConsumerDesignPattern;
+using ProducerConsumerDesignPattern.Actions;
 using ProducerConsumerDesignPattern.Common;
-using ProducerConsumerDesignPattern.Strategy;
 
 public class Programm
 {
@@ -13,10 +13,10 @@ public class Programm
             Action = new UpperAction(),//Can to change (LowerAction, UpperAction, MirrorAction)
             ChannelSize = 1,
             ConsumersCount = 3,
-            ProducersCount = 1,
-            WorkingTimeInSeconds = 10
+            ProducersCount = 1
         };
 
+        Console.WriteLine("Press Any Key To Exit");
         //Init Class
         var _producerConsumer = new ChannelProducerConsumer(_settings.Action, _settings.ChannelSize);
 
@@ -40,7 +40,7 @@ public class Programm
             {
                 if (token.IsCancellationRequested)
                     break;
-                await Task.Delay(100);
+                await Task.Delay(500);
 
                 _producerConsumer.Produce(HelperMethods.RandomString(50));
             }
@@ -48,14 +48,14 @@ public class Programm
         Enumerable.Range(0, _settings.ProducersCount).Select(_ => RunProduce(token)).ToArray();
 
 
-        //Stop after 20 seconds
-        await Task.Delay(_settings.WorkingTimeInSeconds * 1000);
+
+        Console.ReadKey();
+
+
 
         cancelTokenSource.Cancel();
 
         cancelTokenSource.Dispose();
-
-        Console.ReadLine();
     }
 
 

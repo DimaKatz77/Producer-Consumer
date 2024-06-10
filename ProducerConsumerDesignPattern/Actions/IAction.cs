@@ -1,6 +1,4 @@
-﻿
-
-namespace ProducerConsumerDesignPattern.Strategy
+﻿namespace ProducerConsumerDesignPattern.Actions
 {
     public interface IAction
     {
