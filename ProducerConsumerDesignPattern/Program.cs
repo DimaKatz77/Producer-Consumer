@@ -16,7 +16,7 @@ public class Programm
             ProducersCount = 1
         };
 
-        Console.WriteLine("Press Any Key To Exit");
+        Console.WriteLine(">>>>>> Press Any Key To Exit <<<<<<<");
         //Init Class
         var _producerConsumer = new ChannelProducerConsumer(_settings.Action, _settings.ChannelSize);
 
@@ -40,7 +40,7 @@ public class Programm
             {
                 if (token.IsCancellationRequested)
                     break;
-                await Task.Delay(500);
+                await Task.Delay(200);
 
                 _producerConsumer.Produce(HelperMethods.RandomString(50));
             }
@@ -48,10 +48,8 @@ public class Programm
         Enumerable.Range(0, _settings.ProducersCount).Select(_ => RunProduce(token)).ToArray();
 
 
-
+        //Stop Programm on Click
         Console.ReadKey();
-
-
 
         cancelTokenSource.Cancel();
 
